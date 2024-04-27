@@ -103,7 +103,7 @@ def Get_PSF(M, rBFP, rBFP_px, px_size, wavelength, NA, block_line, pol_dir, z_mi
                                                                 [0.5 * np.ones((p_size // 2, p_size // 2)), np.zeros((p_size // 2, p_size // 2))]]),
                                                                 k=pol_dir[i])
         pupil_amplitude_p_pol[:, :, i] = Atmp * np.rot90(np.block([[np.zeros((p_size // 2, p_size // 2)), 0.5 * np.ones((p_size // 2, p_size // 2))],
-                                                                [0.5 * np.ones((p_size // 2, p_size // 2)), np.zeros((p_size // 2, p_size // 2))]]),
+                                                                [-0.5 * np.ones((p_size // 2, p_size // 2)), np.zeros((p_size // 2, p_size // 2))]]),
                                                                 k=pol_dir[i])
         
     # defocus phase

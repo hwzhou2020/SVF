@@ -23,7 +23,7 @@ def get_args():
     # Set general options
     parser.add_argument("--data_path", default='./data', type=str, help="path to data")
     parser.add_argument("--data_name", default='AVG_roots_xyzScan_z2_128.tif', type=str, help=" simData.tif name of the raw image data")
-    parser.add_argument("--exp_psf_name", default='ExpPSF_605_20240311_shift.mat', type=str, help="experimental PSF name")
+    parser.add_argument("--exp_psf_name", default='ExpPSF_605_20240425_shift.mat', type=str, help="experimental PSF name")
     parser.add_argument("--show_inter_imgs", default=False, type=bool, help="show and save intermediate images")
     parser.add_argument("--display_freq", default=100, type=int, help="display / save intermediate image frequency, every n epochs")
     parser.add_argument("--out_dir", type=str, default="vis_exp")
@@ -72,8 +72,8 @@ def get_args():
 
 def abe_to_psf(aberration, num_pol, pupil_ampli_s, pupil_ampli_p, defocus):
     pupil_phase = (aberration + defocus).repeat(num_pol, 1, 1, 1)
-    pupil_s = pupil_ampli_s * torch.exp(1j * pupil_phase) / 2 / torch.mean(pupil_ampli_s, dim=(2, 3), keepdim=True)
-    pupil_p = pupil_ampli_p * torch.exp(1j * pupil_phase) / 2 / torch.mean(pupil_ampli_p, dim=(2, 3), keepdim=True)
+    pupil_s = pupil_ampli_s * torch.exp(1j * pupil_phase) 
+    pupil_p = pupil_ampli_p * torch.exp(1j * pupil_phase) 
     pupil_ifft = torch.flip(torch.fft.ifftshift(torch.fft.ifftn(pupil_s, dim=(-2, -1)), dim=(-2, -1)), dims=[-2, -1])
     psf_s = torch.abs(pupil_ifft) ** 2
     pupil_ifft = torch.flip(torch.fft.ifftshift(torch.fft.ifftn(pupil_p, dim=(-2, -1)), dim=(-2, -1)), dims=[-2, -1])

@@ -1,7 +1,7 @@
 
 if __name__ == "__main__":
     
-    for fov in range(196):
+    for fov in [127]:#[8, 11, 21, 41, 165, 178, 185]: #range(196):
         import os
         import sys
         import torch
@@ -21,7 +21,7 @@ if __name__ == "__main__":
             parser = argparse.ArgumentParser()
             # Set general options
             parser.add_argument("--data_path", default='./data', type=str, help="path to data")
-            parser.add_argument("--exp_psf_name", default='ExpPSF_605_20240311_shift.mat', type=str, help="experimental PSF name")
+            parser.add_argument("--exp_psf_name", default='ExpPSF_605_20240425_shift.mat', type=str, help="experimental PSF name")
             parser.add_argument("--show_inter_imgs", default=False, type=bool, help="show and save intermediate images")
             parser.add_argument("--display_freq", default=100, type=int, help="display / save intermediate image frequency, every n epochs")
             parser.add_argument("--out_dir", type=str, default="vis_exp")
@@ -37,7 +37,6 @@ if __name__ == "__main__":
             parser.add_argument("--if_lr_psf", default=True, help="if learn PSF")
             parser.add_argument("--learn_psf_epochs", default=100, type=int, help="number of epochs for learn psf")
             parser.add_argument("--init_epochs", default=100, type=int, help="number of epochs for initialization")
-            parser.add_argument("--lr_init", default=2e-3, type=float, help="learning rate for learn psf")
             parser.add_argument("--lr_psf", default=2e-3, type=float, help="learning rate for learn psf")
             parser.add_argument("--use_layernorm", default=False, type=bool, help="use layernorm in learn psf")
 
@@ -72,8 +71,8 @@ if __name__ == "__main__":
 
         def abe_to_psf(aberration, num_pol, pupil_ampli_s, pupil_ampli_p, defocus):
             pupil_phase = (aberration + defocus).repeat(num_pol, 1, 1, 1)
-            pupil_s = pupil_ampli_s * torch.exp(1j * pupil_phase) / 2 / torch.mean(pupil_ampli_s, dim=(2, 3), keepdim=True)
-            pupil_p = pupil_ampli_p * torch.exp(1j * pupil_phase) / 2 / torch.mean(pupil_ampli_p, dim=(2, 3), keepdim=True)
+            pupil_s = pupil_ampli_s * torch.exp(1j * pupil_phase) 
+            pupil_p = pupil_ampli_p * torch.exp(1j * pupil_phase) 
             pupil_ifft = torch.flip(torch.fft.ifftshift(torch.fft.ifftn(pupil_s, dim=(-2, -1)), dim=(-2, -1)), dims=[-2, -1])
             psf_s = torch.abs(pupil_ifft) ** 2
             pupil_ifft = torch.flip(torch.fft.ifftshift(torch.fft.ifftn(pupil_p, dim=(-2, -1)), dim=(-2, -1)), dims=[-2, -1])
@@ -141,8 +140,8 @@ if __name__ == "__main__":
             else:
                 g = model_fn(g)
         g_exper = g
-        g_result_dir = f'{args.result_dir}/EXP_' + str(fov+1) + '.mat'
-        sio.savemat(g_result_dir, {"g_exp": g_exper.detach().cpu().numpy().astype('float16')})
+        # g_result_dir = f'{args.result_dir}/EXP_' + str(fov+1) + '.mat'
+        # sio.savemat(g_result_dir, {"g_exp": g_exper.detach().cpu().numpy().astype('float16')}) ########################
         del g, model, model_fn, PSF, PSFR
 
         PSF, PSFR, pupil_ampli_s, pupil_ampli_p, defocus = Get_PSF(M, rBFP, rBFP_px, args.px_size, args.wavelength, args.NA, args.block_line, args.pol_dir, args.z_min, args.z_max, args.z_sep, args.p_size)

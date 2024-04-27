@@ -1,6 +1,6 @@
 CUDA_VISIBLE_DEVICES=0 python fluo_recon.py \
     --data_name AVG_roots_xyzScan_z2_189.tif \
-    --exp_psf_name ExpPSF_605_20240311_shift.mat \
+    --exp_psf_name ExpPSF_605_20240425_shift.mat \
     --show_inter_imgs False \
     --model_opt "complie" \
     --if_log True \

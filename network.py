@@ -3,9 +3,6 @@
 import torch
 import torch.nn as nn
 
-from util import ZernikeImgArray
-
-
 class DeconNet(nn.Module):
     def __init__(self, img, PSF, PSFR, rPSF, r, num_z):
         super(DeconNet, self).__init__()
