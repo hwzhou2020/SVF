@@ -120,7 +120,7 @@ class G_Tensor3D(nn.Module):
         self.x0 = None
 
         self.z_mode = z_dim
-        self.z_data = nn.Parameter(5e-1 * torch.randn((self.z_mode, self.num_feats)), requires_grad=True)
+        self.z_data = nn.Parameter(5e-1 * torch.randn((self.z_mode, self.num_feats)), requires_grad=True) 
         self.z_min = z_min
         self.z_max = z_max
         self.z_dim = z_dim
